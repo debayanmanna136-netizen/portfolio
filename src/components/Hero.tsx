@@ -25,6 +25,22 @@ export default function Hero() {
     return () => observer.disconnect();
   }, []);
 
+  const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.substring(1);
+    const element = document.getElementById(targetId);
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
+
   return (
     <main id="home" className="flex-grow relative overflow-hidden">
       <div className="max-w-full mx-auto lg:h-[calc(100vh-72px)] min-h-[600px] flex flex-col-reverse lg:flex-row relative">
@@ -44,13 +60,15 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-6 lg:justify-start justify-center group/buttons">
               <Link
                 className="px-8 py-4 bg-primary text-on-primary font-label-caps text-label-caps uppercase text-center border border-primary hover:bg-surface-container-lowest hover:text-primary hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-500 inline-block w-full sm:w-auto"
-                href="#"
+                href="#client-work"
+                onClick={(e) => handleScrollToSection(e, "#client-work")}
               >
                 Explore My Work
               </Link>
               <Link
                 className="px-8 py-4 bg-transparent text-primary font-label-caps text-label-caps uppercase text-center border border-primary hover:bg-surface-container hover:border-primary hover:-translate-y-1 transition-all duration-500 inline-block w-full sm:w-auto"
-                href="#"
+                href="#contact"
+                onClick={(e) => handleScrollToSection(e, "#contact")}
               >
                 Contact Me
               </Link>
