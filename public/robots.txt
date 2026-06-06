@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://debayanmanna.vercel.app/sitemap.xml
