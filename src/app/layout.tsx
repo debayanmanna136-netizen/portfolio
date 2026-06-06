@@ -29,6 +29,9 @@ const casualScript = Caveat({
 export const metadata: Metadata = {
   title: "Debayan Manna - Portfolio",
   description: "Debayan Manna Portfolio",
+  verification: {
+    google: "rtXTmA4J68pvM_fTuyXZPERpnkrapwIYYXvXJ6u9Uwk",
+  },
 };
 
 export default function RootLayout({
