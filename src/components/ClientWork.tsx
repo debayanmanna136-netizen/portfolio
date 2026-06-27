@@ -70,10 +70,22 @@ const swipePower = (offset: number, velocity: number) => {
 
 export default function ClientWork() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   // Carousel states
   const [[page, direction], setPage] = useState([0, 0]);
   const [[reviewPage, reviewDirection], setReviewPage] = useState([0, 0]);
+
+  const feedbackSectionRef = useRef<HTMLDivElement>(null);
+  const isFeedbackInView = useInView(feedbackSectionRef, { once: true, margin: "-100px 0px" });
+  const [hasVideoEnded, setHasVideoEnded] = useState(false);
+
+  useEffect(() => {
+    if (isFeedbackInView && videoRef.current && !hasVideoEnded) {
+      videoRef.current.playbackRate = 2.0; // Play at 2x speed for the first time
+      videoRef.current.play().catch(e => console.error("Video play failed:", e));
+    }
+  }, [isFeedbackInView, hasVideoEnded]);
 
   // Wrap around indices
   const activeIndex = ((page % CLIENT_PROJECTS.length) + CLIENT_PROJECTS.length) % CLIENT_PROJECTS.length;
@@ -95,11 +107,12 @@ export default function ClientWork() {
   }, [page]);
 
   useEffect(() => {
+    if (!hasVideoEnded) return;
     const timer = setInterval(() => {
       paginateReview(1);
     }, 8000);
     return () => clearInterval(timer);
-  }, [reviewPage]);
+  }, [reviewPage, hasVideoEnded]);
 
   const smoothVariants = {
     enter: (direction: number) => ({
@@ -353,14 +366,34 @@ export default function ClientWork() {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </div>
         </div>
+        </div>
+      </div>
 
-        {/* Client Feedback Carousel */}
-        <div className="w-full pt-32 pb-8 border-t border-black/10 mt-16 relative">
-          
-          <div className="flex justify-between items-center mb-16">
-            <h3 className="font-label-caps text-label-caps text-[#666] uppercase tracking-widest">
+      {/* Client Feedback Section (Full Bleed) */}
+      <div 
+        ref={feedbackSectionRef}
+        className="w-full mt-24 md:mt-32 relative overflow-hidden shadow-lg border-y border-black/10 z-10"
+      >
+        
+        {/* The Video Element */}
+        <video
+          ref={videoRef}
+          src="/client_review_transition_video.mp4"
+          muted
+          playsInline
+          onEnded={() => setHasVideoEnded(true)}
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        />
+
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: hasVideoEnded ? 1 : 0 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className={`relative z-10 w-full px-6 md:px-12 py-24 md:py-32 ${!hasVideoEnded ? "pointer-events-none" : ""}`}
+        >
+          <div className="flex justify-between items-center mb-16 max-w-6xl mx-auto">
+            <h3 className="font-label-caps text-label-caps text-black uppercase tracking-widest">
               Client Feedback
             </h3>
             <div className="flex gap-4">
@@ -368,14 +401,14 @@ export default function ClientWork() {
                 <>
                   <button 
                     onClick={() => paginateReview(-1)}
-                    className="w-10 h-10 rounded-full border border-black/20 flex items-center justify-center text-[#111] hover:bg-[#111] hover:text-white transition-colors"
+                    className="w-10 h-10 rounded-full border border-black/20 flex items-center justify-center text-black hover:bg-black hover:text-white transition-colors"
                     aria-label="Previous review"
                   >
                     <ArrowLeft size={16} />
                   </button>
                   <button 
                     onClick={() => paginateReview(1)}
-                    className="w-10 h-10 rounded-full border border-black/20 flex items-center justify-center text-[#111] hover:bg-[#111] hover:text-white transition-colors"
+                    className="w-10 h-10 rounded-full border border-black/20 flex items-center justify-center text-black hover:bg-black hover:text-white transition-colors"
                     aria-label="Next review"
                   >
                     <ArrowRight size={16} />
@@ -385,61 +418,67 @@ export default function ClientWork() {
             </div>
           </div>
 
-          <div className="w-full relative overflow-hidden grid grid-cols-1 grid-rows-1 items-start">
-            
-            {/* Hidden dummy elements for ALL reviews to enforce max height */}
-            {CLIENT_REVIEWS.map((dummyReview, i) => (
-              <div key={`dummy-review-${i}`} className="col-start-1 row-start-1 w-full max-w-4xl mx-auto text-center invisible pointer-events-none" aria-hidden="true">
-                <p className="font-display-lg text-2xl md:text-[40px] leading-relaxed mb-10 italic opacity-90 select-none">
-                  "{dummyReview.quote}"
-                </p>
-                <div className="font-label-caps text-label-caps uppercase tracking-widest select-none">
-                  <span className="block mb-2">{dummyReview.author}</span>
-                  {dummyReview.role}
+          {/* Content Overlay */}
+          <div className="w-full max-w-4xl mx-auto text-center text-black">
+            <div className="w-full relative overflow-hidden grid grid-cols-1 grid-rows-1 items-center min-h-[160px] md:min-h-[220px]">
+              
+              {/* Hidden dummy elements for ALL reviews to enforce height */}
+              {CLIENT_REVIEWS.map((dummyReview, i) => (
+                <div key={`dummy-review-${i}`} className="col-start-1 row-start-1 w-full text-center invisible pointer-events-none" aria-hidden="true">
+                  <p className="font-display-lg text-2xl md:text-[36px] leading-loose mb-8 italic px-4 md:px-12">
+                    "{dummyReview.quote}"
+                  </p>
+                  <div className="font-label-caps text-label-caps uppercase tracking-widest">
+                    <span className="block mb-2 text-black">{dummyReview.author}</span>
+                    <span className="text-black/80">{dummyReview.role}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
 
-            <AnimatePresence initial={false} custom={reviewDirection}>
-              <motion.div
-                key={reviewPage}
-                custom={reviewDirection}
-                variants={smoothVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: "tween", duration: 0.8, ease: "easeInOut" },
-                  opacity: { duration: 0.5 },
-                  scale: { duration: 0.8 }
-                }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                onDragEnd={(e, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x);
-                  if (swipe < -swipeConfidenceThreshold) {
-                    paginateReview(1);
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    paginateReview(-1);
-                  }
-                }}
-                className="col-start-1 row-start-1 w-full max-w-4xl mx-auto text-center cursor-grab active:cursor-grabbing"
-              >
-                <p className="font-display-lg text-2xl md:text-[40px] text-[#111] leading-relaxed mb-10 italic opacity-90 select-none">
-                  "{review.quote}"
-                </p>
-                <div className="font-label-caps text-label-caps uppercase tracking-widest text-[#555] select-none">
-                  <span className="text-[#111] block mb-2">{review.author}</span>
-                  {review.role}
-                </div>
-              </motion.div>
-            </AnimatePresence>
+              <AnimatePresence initial={false} custom={reviewDirection}>
+                <motion.div
+                  key={reviewPage}
+                  custom={reviewDirection}
+                  variants={smoothVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "tween", duration: 1.2, ease: "easeInOut" },
+                    opacity: { duration: 0.7 },
+                    scale: { duration: 1.2 }
+                  }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={1}
+                  onDragEnd={(e, { offset, velocity }) => {
+                    const swipe = swipePower(offset.x, velocity.x);
+                    if (swipe < -swipeConfidenceThreshold) {
+                      paginateReview(1);
+                    } else if (swipe > swipeConfidenceThreshold) {
+                      paginateReview(-1);
+                    }
+                  }}
+                  className="col-start-1 row-start-1 w-full text-center cursor-grab active:cursor-grabbing"
+                >
+                  <p className="font-display-lg text-2xl md:text-[36px] text-black leading-loose mb-8 italic px-4 md:px-12">
+                    "{review.quote}"
+                  </p>
+                  <div className="font-label-caps text-label-caps uppercase tracking-widest">
+                    <span className="text-black block mb-2">{review.author}</span>
+                    <span className="text-black/80">{review.role}</span>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
-        </div>
+        </motion.div>
+      </div>
+
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full relative z-10">
 
         {/* About My Journey Section */}
-        <div id="journey" className="w-full pt-32 pb-16 mt-16 border-t border-black/10 relative flex flex-col items-center">
+        <div id="journey" className="w-full pt-24 pb-16 mt-16 border-t border-black/10 relative flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}

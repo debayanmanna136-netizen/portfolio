@@ -184,7 +184,7 @@ export default function Projects() {
           <video
             ref={videoRef}
             className="w-full h-full object-cover"
-            src="/102584-660588476.mp4"
+            src="/project_transition_video.mp4"
             muted
             playsInline
             onEnded={() => setVideoEnded(true)}
