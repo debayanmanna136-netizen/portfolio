@@ -42,7 +42,7 @@ const CLIENT_PROJECTS = [
     description: "A premium digital presence for a luxury interior design studio. The website captures the studio's philosophy of Quiet Luxury — where sophisticated design is whispered through materiality, light, and impeccable craftsmanship.",
     services: ["Brand Identity & Strategy", "Website Design", "Frontend Development", "CMS Integration", "Performance Optimisation"],
     technologies: ["Next.js", "Framer Motion", "Sanity CMS"],
-    liveLink: "https://interiordecordemo.netlify.app/",
+    liveLink: "https://gokulhousing.vercel.app/",
     image: "/interior_zone_hero_section.png",
   },
   {
@@ -50,7 +50,7 @@ const CLIENT_PROJECTS = [
     description: "A high-energy, conversion-focused landing page for a premier fitness bootcamp. Designed to drive sign-ups while showcasing an active and vibrant brand identity.",
     services: ["Website Design", "Frontend Development", "Performance Optimization"],
     technologies: ["Next.js", "Tailwind CSS", "Framer Motion"],
-    liveLink: "https://fitnesscampdemo.netlify.app/",
+    liveLink: "https://gymtemplatehub.netlify.app/",
     image: "/fitness_camp_hero_section.png",
   },
 ];
