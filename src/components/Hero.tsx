@@ -80,7 +80,7 @@ export default function Hero() {
           <div className="w-full h-full relative reveal-up delay-300 scale-[1.15] lg:scale-100 mt-8 lg:mt-0">
             <Image
               alt="Monochrome illustration of Debayan Manna"
-              className="w-full h-full object-contain object-center [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,black_60%,transparent_100%)]"
+              className="w-full h-full object-contain object-center mix-blend-multiply grayscale contrast-125 brightness-110 [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,black_60%,transparent_100%)]"
               src="/hand_drawn_editorial_ink_sketch_illustration_of_the_same_young_male_student.png"
               fill
               priority
