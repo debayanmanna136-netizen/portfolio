@@ -7,6 +7,24 @@ import ProjectCard from "./ProjectCard";
 
 const PLACEHOLDER_PROJECTS = [
   {
+    title: "Twitter Sentiment Analysis",
+    description: "Performance enhancement of DistilBERT for sentiment classification on the Sentiment140 corpus using metaheuristic optimization algorithms (GA & PSO).",
+    tags: ["DistilBERT", "Optimization", "NLP"],
+    githubLink: "https://github.com/debayanmanna136-netizen/twitter_sentiment_analysis",
+  },
+  {
+    title: "AI Learning Assistant",
+    description: "An AI-powered educational tool designed to assist with personalized learning, study optimization, and intelligent query resolution.",
+    tags: ["AI", "Education", "LLM"],
+    githubLink: "https://github.com/debayanmanna136-netizen/ai_learning_assistant",
+  },
+  {
+    title: "AI Prompt Enhancer",
+    description: "An intelligent application that refines and optimizes user prompts for generating better, more accurate responses from Large Language Models.",
+    tags: ["Prompt Engineering", "AI", "NLP"],
+    githubLink: "https://github.com/debayanmanna136-netizen/ai_prompt_enhancer",
+  },
+  {
     title: "Console Chatbot",
     description: "A Python-based conversational chatbot built for the terminal environment. The project explores basic natural language interaction, command-based conversations, and chatbot logic implementation.",
     tags: ["Python", "NLP concepts", "Logic handling"],
