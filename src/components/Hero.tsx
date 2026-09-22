@@ -84,6 +84,7 @@ export default function Hero() {
               src="/hand_drawn_editorial_ink_sketch_illustration_of_the_same_young_male_student.png"
               fill
               priority
+              unoptimized={true}
             />
           </div>
         </div>
